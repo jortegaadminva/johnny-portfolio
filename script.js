@@ -30,15 +30,19 @@ const spy = new IntersectionObserver((entries) => {
 
 sections.forEach(section => spy.observe(section));
 
-// Tool & store logo fallback: if a brand icon fails to load, swap it for a text badge
-document.querySelectorAll('.tool-logo[data-fallback], .store-logo[data-fallback]').forEach(img => {
+// Tool & store logo fallback: if any brand icon fails to load, either swap for a
+// text badge (if data-fallback is set) or just hide the broken image gracefully
+document.querySelectorAll('.tool-logo, .store-logo, .contact-icon-img').forEach(img => {
+  if (img.tagName !== 'IMG') return;
   img.addEventListener('error', () => {
-    const fallback = document.createElement('span');
-    fallback.className = img.classList.contains('store-logo') ? 'store-logo tool-fallback' : 'tool-logo tool-fallback';
-    fallback.style.width = img.classList.contains('store-logo') ? '20px' : '';
-    fallback.style.height = img.classList.contains('store-logo') ? '20px' : '';
-    fallback.style.fontSize = img.classList.contains('store-logo') ? '8px' : '';
-    fallback.textContent = img.getAttribute('data-fallback');
-    img.replaceWith(fallback);
+    const fallbackText = img.getAttribute('data-fallback');
+    if (fallbackText) {
+      const fallback = document.createElement('span');
+      fallback.className = img.classList.contains('store-logo') ? 'store-logo tool-fallback' : 'tool-logo tool-fallback';
+      fallback.textContent = fallbackText;
+      img.replaceWith(fallback);
+    } else {
+      img.style.display = 'none';
+    }
   });
 });

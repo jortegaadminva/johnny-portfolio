@@ -569,6 +569,26 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
    STORE CARDS
    ========================================================= */
 
+.store-group{ margin-bottom:44px; }
+.store-group:last-child{ margin-bottom:0; }
+
+.store-group-head{ margin-bottom:20px; }
+
+.store-group-head h3{
+  font-family:var(--display);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+
+.store-group-head p{
+  margin-top:4px;
+  font-size:13.5px;
+  color:var(--ink-faint);
+}
+
 .store-grid{
   display:grid;
   grid-template-columns:repeat(3, 1fr);

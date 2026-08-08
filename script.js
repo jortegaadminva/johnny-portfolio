@@ -14,22 +14,6 @@
 
   const PRIMARY_TOOLS = [
     {
-      group: 'Admin & operations',
-      tools: [
-        { name: 'Google Workspace', initials: 'Gw', color: '#4285F4' },
-        { name: 'Microsoft 365',    initials: 'Ms', color: '#D83B01' },
-        { name: 'Microsoft Excel',  initials: 'Ex', color: '#217346' },
-        { name: 'Google Sheets',    initials: 'Gs', color: '#0F9D58' },
-        { name: 'Outlook',          initials: 'Ol', color: '#0072C6' },
-        { name: 'Monday.com',       initials: 'Mo', color: '#FF3D57' },
-        { name: 'Trello',           initials: 'Tr', color: '#0079BF' },
-        { name: 'HubSpot CRM',      initials: 'Hs', color: '#FF7A59' },
-        { name: 'Slack',            initials: 'Sl', color: '#4A154B' },
-        { name: 'Zoom',             initials: 'Zm', color: '#2D8CFF' },
-        { name: 'Mailchimp',        initials: 'Mc', color: '#FFE01B', dark: true }
-      ]
-    },
-    {
       group: 'E-commerce platforms',
       tools: [
         { name: 'eBay Seller Hub',     initials: 'eB', color: '#E53238' },
@@ -43,15 +27,33 @@
         { name: 'Shopee',              initials: 'Sp', color: '#EE4D2D' },
         { name: 'Lazada',              initials: 'Lz', color: '#0F146D' },
         { name: '1688',                initials: '16', color: '#FF6A00' },
-        { name: 'AliExpress',          initials: 'Ae', color: '#E62E04' }
+        { name: 'AliExpress',          initials: 'Ae', color: '#E62E04' },
+        { name: 'Alura',               initials: 'Al', color: '#2E7D6E' },
+        { name: 'EtsyHunt',            initials: 'Eh', color: '#F2711C' }
       ]
     },
     {
-      group: 'Creative & AI',
+      group: 'Operations & productivity',
+      tools: [
+        { name: 'Google Workspace', initials: 'Gw', color: '#4285F4' },
+        { name: 'Microsoft 365',    initials: 'Ms', color: '#D83B01' },
+        { name: 'Microsoft Excel',  initials: 'Ex', color: '#217346' },
+        { name: 'Google Sheets',    initials: 'Gs', color: '#0F9D58' },
+        { name: 'Monday.com',       initials: 'Mo', color: '#FF3D57' },
+        { name: 'Trello',           initials: 'Tr', color: '#0079BF' },
+        { name: 'HubSpot CRM',      initials: 'Hs', color: '#FF7A59' },
+        { name: 'Slack',            initials: 'Sl', color: '#4A154B' },
+        { name: 'Zoom',             initials: 'Zm', color: '#2D8CFF' },
+        { name: 'Mailchimp',        initials: 'Mc', color: '#FFE01B', dark: true }
+      ]
+    },
+    {
+      group: 'AI & creative',
       tools: [
         { name: 'Canva',              initials: 'Cv', color: '#00C4CC' },
         { name: 'Adobe Photoshop',    initials: 'Ps', color: '#31A8FF' },
         { name: 'ChatGPT',            initials: 'Gp', color: '#10A37F' },
+        { name: 'Google AI Studio',   initials: 'Ga', color: '#1A73E8' },
         { name: 'Claude',             initials: 'Cl', color: '#D97757' },
         { name: 'Google Gemini',      initials: 'Ge', color: '#8E75B2' },
         { name: 'Microsoft Copilot',  initials: 'Cp', color: '#185ABD' }
@@ -61,18 +63,13 @@
 
   const TECHNICAL_TOOLS = [
     {
-      group: 'Systems & remote support',
+      group: 'IT infrastructure & network support',
       tools: [
         { name: 'Windows',     initials: 'Wn', color: '#00A4EF' },
         { name: 'Linux',       initials: 'Lx', color: '#FCC624', dark: true },
-        { name: 'TeamViewer',  initials: 'Tv', color: '#0E8EE9' },
-        { name: 'AnyDesk',     initials: 'Ad', color: '#EF443B' },
         { name: 'RingCentral', initials: 'Rc', color: '#FF7A00' },
         { name: 'pfSense',     initials: 'Pf', color: '#212121' },
-        { name: 'OPNsense',    initials: 'Op', color: '#D94F00' },
-        { name: 'VS Code',     initials: 'Vs', color: '#007ACC' },
-        { name: 'Git',         initials: 'Gi', color: '#F05032' },
-        { name: 'GitHub',      initials: 'Gh', color: '#181717' }
+        { name: 'OPNsense',    initials: 'Op', color: '#D94F00' }
       ]
     }
   ];

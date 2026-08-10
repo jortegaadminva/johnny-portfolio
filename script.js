@@ -14,37 +14,51 @@
 
   const PRIMARY_TOOLS = [
     {
-      group: 'E-commerce platforms',
+      group: 'E-commerce & marketplace',
       tools: [
-        { name: 'eBay Seller Hub',     initials: 'eB', color: '#E53238' },
         { name: 'Etsy Seller',         initials: 'Et', color: '#F1641E' },
+        { name: 'eBay Seller Hub',     initials: 'eB', color: '#E53238' },
         { name: 'WooCommerce',         initials: 'Wc', color: '#7F54B3' },
         { name: 'WordPress',           initials: 'Wp', color: '#21759B' },
-        { name: 'Elementor',           initials: 'El', color: '#92003B' },
         { name: 'ShipStation',         initials: 'Sh', color: '#2C3E50' },
-        { name: '1688',                initials: '16', color: '#FF6A00' },
-        { name: 'AliExpress',          initials: 'Ae', color: '#E62E04' },
         { name: 'Alura',               initials: 'Al', color: '#2E7D6E' },
         { name: 'EtsyHunt',            initials: 'Eh', color: '#F2711C' },
-        { name: 'Amazon Seller Central', initials: 'Am', color: '#232F3E' },
-        { name: 'Walmart Marketplace', initials: 'Wm', color: '#0071CE' },
-        { name: 'Shopee',              initials: 'Sp', color: '#EE4D2D' },
-        { name: 'Lazada',              initials: 'Lz', color: '#0F146D' }
+        { name: '1688',                initials: '16', color: '#FF6A00' },
+        { name: 'AliExpress',          initials: 'Ae', color: '#E62E04' },
+        { name: 'Elementor',           initials: 'El', color: '#92003B' }
+      ],
+      secondary: [
+        {
+          label: 'Additional platform experience',
+          tools: [
+            { name: 'Amazon Seller Central', initials: 'Am', color: '#232F3E' },
+            { name: 'Walmart Marketplace', initials: 'Wm', color: '#0071CE' },
+            { name: 'Shopee',              initials: 'Sp', color: '#EE4D2D' },
+            { name: 'Lazada',              initials: 'Lz', color: '#0F146D' }
+          ]
+        }
       ]
     },
     {
       group: 'Operations & productivity',
       tools: [
-        { name: 'Google Workspace', initials: 'Gw', color: '#4285F4' },
-        { name: 'Microsoft 365',    initials: 'Ms', color: '#D83B01' },
         { name: 'Microsoft Excel',  initials: 'Ex', color: '#217346' },
         { name: 'Google Sheets',    initials: 'Gs', color: '#0F9D58' },
+        { name: 'Google Workspace', initials: 'Gw', color: '#4285F4' },
+        { name: 'Microsoft 365',    initials: 'Ms', color: '#D83B01' },
         { name: 'Monday.com',       initials: 'Mo', color: '#FF3D57' },
         { name: 'Trello',           initials: 'Tr', color: '#0079BF' },
-        { name: 'HubSpot CRM',      initials: 'Hs', color: '#FF7A59' },
-        { name: 'Slack',            initials: 'Sl', color: '#4A154B' },
-        { name: 'Zoom',             initials: 'Zm', color: '#2D8CFF' },
-        { name: 'Mailchimp',        initials: 'Mc', color: '#FFE01B', dark: true }
+        { name: 'Slack',            initials: 'Sl', color: '#4A154B' }
+      ],
+      secondary: [
+        {
+          label: 'Additional business tools',
+          tools: [
+            { name: 'HubSpot CRM',      initials: 'Hs', color: '#FF7A59' },
+            { name: 'Zoom',             initials: 'Zm', color: '#2D8CFF' },
+            { name: 'Mailchimp',        initials: 'Mc', color: '#FFE01B', dark: true }
+          ]
+        }
       ]
     },
     {
@@ -54,6 +68,23 @@
         { name: 'Adobe Photoshop',    initials: 'Ps', color: '#31A8FF' },
         { name: 'ChatGPT',            initials: 'Gp', color: '#10A37F' },
         { name: 'Google AI Studio',   initials: 'Ga', color: '#1A73E8' }
+      ],
+      secondary: [
+        {
+          label: 'Additional creative tools',
+          tools: [
+            { name: 'Adobe Premiere Pro', initials: 'Pr', color: '#00005B' },
+            { name: 'CapCut',             initials: 'Cc', color: '#000000' }
+          ]
+        },
+        {
+          label: 'Additional AI tools',
+          tools: [
+            { name: 'Claude',             initials: 'Cl', color: '#D97757' },
+            { name: 'Google Gemini',      initials: 'Ge', color: '#8E75B2' },
+            { name: 'Microsoft Copilot',  initials: 'Cp', color: '#185ABD' }
+          ]
+        }
       ]
     }
   ];
@@ -77,21 +108,33 @@
     });
   }
 
+  function buildPill(t, compact) {
+    const textColor = t.dark ? 'color:#1F2A24;' : '';
+    const liClass = compact ? 'tool-pill tool-pill-compact' : 'tool-pill';
+    return '<li class="' + liClass + '">' +
+             '<span class="badge" style="background:' + t.color + ';' + textColor + '" aria-hidden="true">' +
+               escapeHtml(t.initials) +
+             '</span>' +
+             '<span class="label">' + escapeHtml(t.name) + '</span>' +
+           '</li>';
+  }
+
   function buildToolGroups(data) {
     return data.map(function (group) {
-      const pills = group.tools.map(function (t) {
-        const textColor = t.dark ? 'color:#1F2A24;' : '';
-        return '<li class="tool-pill">' +
-                 '<span class="badge" style="background:' + t.color + ';' + textColor + '" aria-hidden="true">' +
-                   escapeHtml(t.initials) +
-                 '</span>' +
-                 '<span class="label">' + escapeHtml(t.name) + '</span>' +
-               '</li>';
+      const pills = group.tools.map(function (t) { return buildPill(t, false); }).join('');
+
+      const secondaryHtml = (group.secondary || []).map(function (sub) {
+        const subPills = sub.tools.map(function (t) { return buildPill(t, true); }).join('');
+        return '<div class="tool-secondary-group">' +
+                 '<p class="tool-secondary-label">' + escapeHtml(sub.label) + '</p>' +
+                 '<ul class="tool-row tool-row-secondary">' + subPills + '</ul>' +
+               '</div>';
       }).join('');
 
       return '<div class="tool-group">' +
                '<h3>' + escapeHtml(group.group) + '</h3>' +
                '<ul class="tool-row">' + pills + '</ul>' +
+               secondaryHtml +
              '</div>';
     }).join('');
   }

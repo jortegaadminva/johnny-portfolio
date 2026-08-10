@@ -1032,6 +1032,36 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   white-space:nowrap;
 }
 
+.tool-secondary-group{ margin-top:14px; }
+
+.tool-secondary-label{
+  font-family:var(--display);
+  font-size:11.5px;
+  font-weight:600;
+  color:var(--ink-faint);
+  margin-bottom:8px;
+}
+
+.tool-row-secondary{ gap:8px; }
+
+.tool-pill-compact{
+  background:var(--cream-deep);
+  border-color:var(--border);
+  padding:5px 12px 5px 5px;
+}
+
+.tool-pill-compact .badge{
+  width:20px;
+  height:20px;
+  font-size:9.5px;
+}
+
+.tool-pill-compact .label{
+  font-size:12.5px;
+  font-weight:500;
+  color:var(--ink-soft);
+}
+
 .tech-disclosure{
   margin-top:8px;
   border-top:1px solid var(--border);

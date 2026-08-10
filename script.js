@@ -245,4 +245,167 @@
     });
   });
 
+
+  /* -------------------------------------------------------
+     6. Work-sample lightbox
+     Progressive enhancement: the original href remains a valid fallback.
+     Smooth opening/closing animation stays on-page and respects reduced motion.
+     ------------------------------------------------------- */
+
+  const sampleLightbox = document.getElementById('sampleLightbox');
+  const lightboxImage = document.getElementById('lightboxImage');
+  const lightboxTitle = document.getElementById('lightboxTitle');
+  const lightboxMeta = document.getElementById('lightboxMeta');
+  const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxPanel = sampleLightbox ? sampleLightbox.querySelector('.lightbox-panel') : null;
+  const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
+  let lastLightboxTrigger = null;
+  let lightboxCloseTimer = null;
+  let lightboxIsClosing = false;
+
+  function prefersReducedMotion() {
+    return reducedMotionQuery ? reducedMotionQuery.matches : false;
+  }
+
+  function getSampleDetails(trigger) {
+    const card = trigger.closest('.sample-card, .visual-project');
+    const titleNode = card ? card.querySelector('h3') : null;
+    const sourceNode = card ? card.querySelector('.sample-source') : null;
+    const categoryNode = card ? card.querySelector('.sample-category') : null;
+    const previewImage = trigger.querySelector('img') || (card ? card.querySelector('img') : null);
+
+    const metaParts = [];
+    if (sourceNode && sourceNode.textContent.trim()) metaParts.push(sourceNode.textContent.trim());
+    if (categoryNode && categoryNode.textContent.trim()) metaParts.push(categoryNode.textContent.trim());
+
+    return {
+      src: trigger.getAttribute('href'),
+      title: titleNode && titleNode.textContent.trim() ? titleNode.textContent.trim() : 'Work sample',
+      meta: metaParts.join(' · '),
+      alt: previewImage && previewImage.getAttribute('alt')
+        ? previewImage.getAttribute('alt')
+        : (titleNode ? titleNode.textContent.trim() : 'Work sample preview')
+    };
+  }
+
+  function revealLightbox() {
+    if (!sampleLightbox || !sampleLightbox.open) return;
+    sampleLightbox.classList.remove('is-closing');
+    sampleLightbox.classList.add('is-visible');
+  }
+
+  function openSampleLightbox(trigger) {
+    if (!sampleLightbox || !lightboxImage || typeof sampleLightbox.showModal !== 'function') return false;
+
+    const details = getSampleDetails(trigger);
+    if (!details.src) return false;
+
+    if (lightboxCloseTimer) {
+      window.clearTimeout(lightboxCloseTimer);
+      lightboxCloseTimer = null;
+    }
+
+    lightboxIsClosing = false;
+    lastLightboxTrigger = trigger;
+    sampleLightbox.classList.remove('is-visible', 'is-closing');
+    lightboxImage.classList.remove('is-loaded');
+    lightboxImage.src = details.src;
+    lightboxImage.alt = details.alt;
+    lightboxTitle.textContent = details.title;
+    lightboxMeta.textContent = details.meta;
+
+    document.body.classList.add('lightbox-open');
+    sampleLightbox.showModal();
+
+    // Two frames guarantee the browser paints the initial scaled/faded state
+    // before transitioning to the visible state.
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(revealLightbox);
+    });
+
+    if (lightboxImage.complete && lightboxImage.naturalWidth) {
+      window.requestAnimationFrame(function () {
+        lightboxImage.classList.add('is-loaded');
+      });
+    }
+
+    if (lightboxClose) lightboxClose.focus();
+    return true;
+  }
+
+  function finishLightboxClose() {
+    if (!sampleLightbox || !sampleLightbox.open) return;
+    sampleLightbox.close();
+  }
+
+  function closeSampleLightbox() {
+    if (!sampleLightbox || !sampleLightbox.open || lightboxIsClosing) return;
+
+    if (prefersReducedMotion()) {
+      finishLightboxClose();
+      return;
+    }
+
+    lightboxIsClosing = true;
+    sampleLightbox.classList.remove('is-visible');
+    sampleLightbox.classList.add('is-closing');
+
+    // Match the CSS closing transition, then remove the native dialog.
+    lightboxCloseTimer = window.setTimeout(finishLightboxClose, 240);
+  }
+
+  document.querySelectorAll('.lightbox-trigger').forEach(function (trigger) {
+    trigger.addEventListener('click', function (e) {
+      // Preserve normal browser behaviors such as Ctrl/Cmd-click or middle-click.
+      if (e.button !== 0 || e.ctrlKey || e.metaKey || e.shiftKey || e.altKey) return;
+
+      if (openSampleLightbox(trigger)) e.preventDefault();
+    });
+  });
+
+  if (sampleLightbox) {
+    if (lightboxImage) {
+      lightboxImage.addEventListener('load', function () {
+        lightboxImage.classList.add('is-loaded');
+      });
+    }
+
+    if (lightboxClose) {
+      lightboxClose.addEventListener('click', closeSampleLightbox);
+    }
+
+    // Intercept native Escape closing so the exit animation can play first.
+    sampleLightbox.addEventListener('cancel', function (e) {
+      e.preventDefault();
+      closeSampleLightbox();
+    });
+
+    // Clicking the dark/blurred space outside the panel closes the preview.
+    sampleLightbox.addEventListener('click', function (e) {
+      if (e.target === sampleLightbox || (lightboxPanel && !lightboxPanel.contains(e.target))) {
+        closeSampleLightbox();
+      }
+    });
+
+    sampleLightbox.addEventListener('close', function () {
+      if (lightboxCloseTimer) {
+        window.clearTimeout(lightboxCloseTimer);
+        lightboxCloseTimer = null;
+      }
+
+      lightboxIsClosing = false;
+      sampleLightbox.classList.remove('is-visible', 'is-closing');
+      document.body.classList.remove('lightbox-open');
+      lightboxImage.classList.remove('is-loaded');
+      lightboxImage.removeAttribute('src');
+      lightboxImage.alt = '';
+      lightboxMeta.textContent = '';
+
+      if (lastLightboxTrigger && document.contains(lastLightboxTrigger)) {
+        lastLightboxTrigger.focus();
+      }
+      lastLightboxTrigger = null;
+    });
+  }
+
 })();

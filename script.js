@@ -257,11 +257,29 @@
   const lightboxTitle = document.getElementById('lightboxTitle');
   const lightboxMeta = document.getElementById('lightboxMeta');
   const lightboxClose = document.getElementById('lightboxClose');
+  const lightboxZoom = document.getElementById('lightboxZoom');
+  const lightboxPrev = document.getElementById('lightboxPrev');
+  const lightboxNext = document.getElementById('lightboxNext');
   const lightboxPanel = sampleLightbox ? sampleLightbox.querySelector('.lightbox-panel') : null;
   const reducedMotionQuery = window.matchMedia ? window.matchMedia('(prefers-reduced-motion: reduce)') : null;
   let lastLightboxTrigger = null;
   let lightboxCloseTimer = null;
   let lightboxIsClosing = false;
+  let currentSlideIndex = -1;
+
+  // Build the Previous/Next sequence from whatever lightbox triggers actually
+  // exist in the page right now — never hardcoded — deduplicated by href so
+  // the thumbnail and its "View sample" link (same image, two triggers) only
+  // count once and in DOM order (operational samples first, then visuals).
+  const galleryTriggers = Array.prototype.slice.call(document.querySelectorAll('.lightbox-trigger'));
+  const gallerySlides = [];
+  const seenHrefs = {};
+  galleryTriggers.forEach(function (trigger) {
+    const href = trigger.getAttribute('href');
+    if (!href || seenHrefs[href]) return;
+    seenHrefs[href] = true;
+    gallerySlides.push({ trigger: trigger, details: null });
+  });
 
   function prefersReducedMotion() {
     return reducedMotionQuery ? reducedMotionQuery.matches : false;
@@ -288,6 +306,75 @@
     };
   }
 
+  function findSlideIndexForTrigger(trigger) {
+    const href = trigger.getAttribute('href');
+    for (let i = 0; i < gallerySlides.length; i++) {
+      if (gallerySlides[i].trigger.getAttribute('href') === href) return i;
+    }
+    return -1;
+  }
+
+  function updateNavState() {
+    if (lightboxPrev) lightboxPrev.disabled = currentSlideIndex <= 0;
+    if (lightboxNext) lightboxNext.disabled = currentSlideIndex >= gallerySlides.length - 1;
+  }
+
+  function resetZoom() {
+    if (lightboxImage) lightboxImage.classList.remove('is-zoomed');
+    if (lightboxZoom) {
+      lightboxZoom.setAttribute('aria-pressed', 'false');
+      lightboxZoom.setAttribute('aria-label', 'Zoom in on image');
+      const glyph = lightboxZoom.querySelector('.lightbox-zoom-glyph');
+      if (glyph) glyph.textContent = '+';
+    }
+  }
+
+  function toggleZoom() {
+    if (!lightboxImage) return;
+    const zoomed = lightboxImage.classList.toggle('is-zoomed');
+    if (lightboxZoom) {
+      lightboxZoom.setAttribute('aria-pressed', String(zoomed));
+      lightboxZoom.setAttribute('aria-label', zoomed ? 'Zoom out of image' : 'Zoom in on image');
+      const glyph = lightboxZoom.querySelector('.lightbox-zoom-glyph');
+      if (glyph) glyph.textContent = zoomed ? '\u2212' : '+';
+    }
+  }
+
+  function showSlide(index) {
+    const slide = gallerySlides[index];
+    if (!slide || !lightboxImage) return;
+
+    if (!slide.details) slide.details = getSampleDetails(slide.trigger);
+    const details = slide.details;
+
+    currentSlideIndex = index;
+    lastLightboxTrigger = slide.trigger;
+    resetZoom();
+    updateNavState();
+
+    lightboxImage.classList.remove('is-loaded');
+    lightboxImage.src = details.src;
+    lightboxImage.alt = details.alt;
+    lightboxTitle.textContent = details.title;
+    lightboxMeta.textContent = details.meta;
+
+    if (lightboxImage.complete && lightboxImage.naturalWidth) {
+      window.requestAnimationFrame(function () {
+        lightboxImage.classList.add('is-loaded');
+      });
+    }
+  }
+
+  function showPrevSlide() {
+    if (currentSlideIndex <= 0) return;
+    showSlide(currentSlideIndex - 1);
+  }
+
+  function showNextSlide() {
+    if (currentSlideIndex >= gallerySlides.length - 1) return;
+    showSlide(currentSlideIndex + 1);
+  }
+
   function revealLightbox() {
     if (!sampleLightbox || !sampleLightbox.open) return;
     sampleLightbox.classList.remove('is-closing');
@@ -297,8 +384,8 @@
   function openSampleLightbox(trigger) {
     if (!sampleLightbox || !lightboxImage || typeof sampleLightbox.showModal !== 'function') return false;
 
-    const details = getSampleDetails(trigger);
-    if (!details.src) return false;
+    const index = findSlideIndexForTrigger(trigger);
+    if (index === -1) return false;
 
     if (lightboxCloseTimer) {
       window.clearTimeout(lightboxCloseTimer);
@@ -306,13 +393,9 @@
     }
 
     lightboxIsClosing = false;
-    lastLightboxTrigger = trigger;
     sampleLightbox.classList.remove('is-visible', 'is-closing');
-    lightboxImage.classList.remove('is-loaded');
-    lightboxImage.src = details.src;
-    lightboxImage.alt = details.alt;
-    lightboxTitle.textContent = details.title;
-    lightboxMeta.textContent = details.meta;
+
+    showSlide(index);
 
     document.body.classList.add('lightbox-open');
     sampleLightbox.showModal();
@@ -322,12 +405,6 @@
     window.requestAnimationFrame(function () {
       window.requestAnimationFrame(revealLightbox);
     });
-
-    if (lightboxImage.complete && lightboxImage.naturalWidth) {
-      window.requestAnimationFrame(function () {
-        lightboxImage.classList.add('is-loaded');
-      });
-    }
 
     if (lightboxClose) lightboxClose.focus();
     return true;
@@ -368,11 +445,37 @@
       lightboxImage.addEventListener('load', function () {
         lightboxImage.classList.add('is-loaded');
       });
+      // Clicking the image itself toggles the fit/zoomed view, same as the Zoom button.
+      lightboxImage.addEventListener('click', toggleZoom);
     }
 
     if (lightboxClose) {
       lightboxClose.addEventListener('click', closeSampleLightbox);
     }
+
+    if (lightboxZoom) {
+      lightboxZoom.addEventListener('click', toggleZoom);
+    }
+
+    if (lightboxPrev) {
+      lightboxPrev.addEventListener('click', showPrevSlide);
+    }
+
+    if (lightboxNext) {
+      lightboxNext.addEventListener('click', showNextSlide);
+    }
+
+    // Left/Right arrow keys move through the gallery while the dialog is open.
+    // Escape is handled separately below via the dialog's native 'cancel' event.
+    sampleLightbox.addEventListener('keydown', function (e) {
+      if (e.key === 'ArrowLeft') {
+        e.preventDefault();
+        showPrevSlide();
+      } else if (e.key === 'ArrowRight') {
+        e.preventDefault();
+        showNextSlide();
+      }
+    });
 
     // Intercept native Escape closing so the exit animation can play first.
     sampleLightbox.addEventListener('cancel', function (e) {
@@ -400,6 +503,8 @@
       lightboxImage.removeAttribute('src');
       lightboxImage.alt = '';
       lightboxMeta.textContent = '';
+      resetZoom();
+      currentSlideIndex = -1;
 
       if (lastLightboxTrigger && document.contains(lastLightboxTrigger)) {
         lastLightboxTrigger.focus();

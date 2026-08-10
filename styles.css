@@ -252,6 +252,12 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   font-size:17px;
 }
 
+.section-note{
+  margin-top:8px;
+  color:var(--ink-faint);
+  font-size:13.5px;
+}
+
 .on-dark{ color:var(--cream); }
 .section-sub.on-dark{ color:rgba(251,247,238,.72); }
 
@@ -1558,6 +1564,83 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
     box-shadow .18s ease;
 }
 
+.lightbox-zoom{
+  position:absolute;
+  top:12px;
+  left:12px;
+  z-index:3;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:999px;
+  background:rgba(22,36,47,.92);
+  color:var(--white);
+  font-family:var(--display);
+  font-size:22px;
+  font-weight:700;
+  line-height:1;
+  cursor:zoom-in;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+
+  opacity:0;
+  transform:scale(.76);
+  transition:
+    opacity .2s ease .12s,
+    transform .32s cubic-bezier(.16,1,.3,1) .1s,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.lightbox-zoom[aria-pressed="true"]{ cursor:zoom-out; }
+
+.lightbox-nav{
+  position:absolute;
+  top:50%;
+  z-index:3;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:44px;
+  height:44px;
+  margin-top:-22px;
+  border:1px solid rgba(255,255,255,.25);
+  border-radius:999px;
+  background:rgba(22,36,47,.92);
+  color:var(--white);
+  font-family:var(--display);
+  font-size:26px;
+  line-height:1;
+  cursor:pointer;
+  box-shadow:0 8px 24px rgba(0,0,0,.22);
+
+  opacity:0;
+  transition:
+    opacity .2s ease .12s,
+    transform .2s ease,
+    background .18s ease,
+    box-shadow .18s ease;
+}
+
+.lightbox-prev{ left:12px; }
+.lightbox-next{ right:12px; }
+
+.lightbox-nav:disabled{
+  opacity:0 !important;
+  pointer-events:none;
+}
+
+.lightbox.is-visible .lightbox-nav:not(:disabled){ opacity:1; }
+
+.lightbox-nav:hover:not(:disabled),
+.lightbox-zoom:hover{
+  transform:translateY(-1px);
+  background:var(--navy);
+  box-shadow:0 10px 30px rgba(0,0,0,.3);
+}
+
 .lightbox-image-wrap{
   display:flex;
   align-items:center;
@@ -1580,6 +1663,7 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   margin:auto;
   border-radius:8px;
   box-shadow:0 10px 34px rgba(0,0,0,.24);
+  cursor:zoom-in;
 
   opacity:0;
   transform:scale(.975);
@@ -1595,6 +1679,19 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   opacity:1;
   transform:scale(1);
   filter:saturate(1);
+}
+
+/* Zoomed view: drop the fit-to-viewport caps so the image can render at up
+   to double its fitted size. The wrap is already overflow:auto, so it
+   scrolls/pans through the enlarged image with ordinary scrolling — no pan
+   library needed. */
+.lightbox-image.is-zoomed{
+  max-width:none;
+  max-height:none;
+  width:auto;
+  height:auto;
+  cursor:zoom-out;
+  margin:0;
 }
 
 .lightbox-caption{
@@ -1645,6 +1742,11 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   transform:scale(1) rotate(0);
 }
 
+.lightbox.is-visible .lightbox-zoom{
+  opacity:1;
+  transform:scale(1);
+}
+
 .lightbox.is-visible .lightbox-caption{
   opacity:1;
   transform:translateY(0);
@@ -1687,6 +1789,13 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   transition-duration:.16s;
 }
 
+.lightbox.is-closing .lightbox-zoom,
+.lightbox.is-closing .lightbox-nav{
+  opacity:0;
+  transition-delay:0s;
+  transition-duration:.16s;
+}
+
 .lightbox.is-closing .lightbox-image{
   opacity:0;
   transform:scale(.985);
@@ -1712,6 +1821,24 @@ body.lightbox-open{ overflow:hidden; }
     font-size:25px;
   }
 
+  .lightbox-zoom{
+    top:8px;
+    left:8px;
+    width:40px;
+    height:40px;
+    font-size:19px;
+  }
+
+  .lightbox-nav{
+    width:40px;
+    height:40px;
+    margin-top:-20px;
+    font-size:22px;
+  }
+
+  .lightbox-prev{ left:8px; }
+  .lightbox-next{ right:8px; }
+
   .lightbox-image-wrap{ padding:10px; }
 
   .lightbox-image{
@@ -1728,6 +1855,8 @@ body.lightbox-open{ overflow:hidden; }
   .lightbox,
   .lightbox-panel,
   .lightbox-close,
+  .lightbox-zoom,
+  .lightbox-nav,
   .lightbox-image,
   .lightbox-caption{
     transition:none !important;
@@ -1735,6 +1864,8 @@ body.lightbox-open{ overflow:hidden; }
 
   .lightbox-panel,
   .lightbox-close,
+  .lightbox-zoom,
+  .lightbox-nav,
   .lightbox-image,
   .lightbox-caption{
     transform:none !important;
@@ -1743,6 +1874,8 @@ body.lightbox-open{ overflow:hidden; }
   .lightbox.is-visible,
   .lightbox.is-visible .lightbox-panel,
   .lightbox.is-visible .lightbox-close,
+  .lightbox.is-visible .lightbox-zoom,
+  .lightbox.is-visible .lightbox-nav:not(:disabled),
   .lightbox.is-visible .lightbox-caption,
   .lightbox-image.is-loaded{
     opacity:1;

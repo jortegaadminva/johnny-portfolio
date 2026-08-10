@@ -39,7 +39,10 @@
 <link rel="stylesheet"
       href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap">
 
-<link rel="stylesheet" href="styles.css">
+<!-- Cache-busting: bump ?v=X.X on styles.css and script.js together (e.g. 1.1 -> 1.2)
+     whenever a CSS/JS change is deployed, so GitHub Pages / browsers fetch the new files
+     instead of a cached copy. Keep both files on the same version number. -->
+<link rel="stylesheet" href="styles.css?v=1.1">
 
 <!-- Structured data: only facts present in the resumes / site -->
 <script type="application/ld+json">
@@ -402,6 +405,9 @@
         <h2>Selected e-commerce storefronts</h2>
         <p class="section-sub">
           Storefronts I've worked on directly, grouped by client engagement. Each link opens the live store.
+        </p>
+        <p class="section-note">
+          Live storefront content may have changed since my engagement; links are provided as context for the stores I supported.
         </p>
       </div>
 
@@ -980,10 +986,10 @@
 
         <div class="about-text">
           <p class="section-tag">About</p>
-          <h2>Operations and e-commerce support, backed by an IT background</h2>
+          <h2>E-commerce and operations support, backed by an IT background</h2>
 
           <p>
-            I'm Johnny, an Operations &amp; E-Commerce Specialist with an IT support background
+            I'm Johnny, an E-Commerce &amp; Operations Specialist with an IT support background
             based in the Philippines. My career has spanned business operations, e-commerce and
             technical support since 2016, with e-commerce experience dating back to 2018 and remote
             experience supporting international clients and teams.
@@ -1116,6 +1122,18 @@
       <span aria-hidden="true">&times;</span>
     </button>
 
+    <button type="button" class="lightbox-zoom" id="lightboxZoom" aria-pressed="false" aria-label="Zoom in on image">
+      <span class="lightbox-zoom-glyph" aria-hidden="true">+</span>
+    </button>
+
+    <button type="button" class="lightbox-nav lightbox-prev" id="lightboxPrev" aria-label="Previous work sample">
+      <span aria-hidden="true">&#8249;</span>
+    </button>
+
+    <button type="button" class="lightbox-nav lightbox-next" id="lightboxNext" aria-label="Next work sample">
+      <span aria-hidden="true">&#8250;</span>
+    </button>
+
     <div class="lightbox-image-wrap">
       <img id="lightboxImage" class="lightbox-image" src="" alt="">
     </div>
@@ -1127,6 +1145,6 @@
   </div>
 </dialog>
 
-<script src="script.js" defer></script>
+<script src="script.js?v=1.1" defer></script>
 </body>
 </html>

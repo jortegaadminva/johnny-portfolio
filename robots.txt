@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://jortegaadminva.github.io/johnny-portfolio/sitemap.xml

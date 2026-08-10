@@ -18,18 +18,18 @@
       tools: [
         { name: 'eBay Seller Hub',     initials: 'eB', color: '#E53238' },
         { name: 'Etsy Seller',         initials: 'Et', color: '#F1641E' },
-        { name: 'Amazon Seller Central', initials: 'Am', color: '#232F3E' },
-        { name: 'Walmart Marketplace', initials: 'Wm', color: '#0071CE' },
         { name: 'WooCommerce',         initials: 'Wc', color: '#7F54B3' },
         { name: 'WordPress',           initials: 'Wp', color: '#21759B' },
         { name: 'Elementor',           initials: 'El', color: '#92003B' },
         { name: 'ShipStation',         initials: 'Sh', color: '#2C3E50' },
-        { name: 'Shopee',              initials: 'Sp', color: '#EE4D2D' },
-        { name: 'Lazada',              initials: 'Lz', color: '#0F146D' },
         { name: '1688',                initials: '16', color: '#FF6A00' },
         { name: 'AliExpress',          initials: 'Ae', color: '#E62E04' },
         { name: 'Alura',               initials: 'Al', color: '#2E7D6E' },
-        { name: 'EtsyHunt',            initials: 'Eh', color: '#F2711C' }
+        { name: 'EtsyHunt',            initials: 'Eh', color: '#F2711C' },
+        { name: 'Amazon Seller Central', initials: 'Am', color: '#232F3E' },
+        { name: 'Walmart Marketplace', initials: 'Wm', color: '#0071CE' },
+        { name: 'Shopee',              initials: 'Sp', color: '#EE4D2D' },
+        { name: 'Lazada',              initials: 'Lz', color: '#0F146D' }
       ]
     },
     {
@@ -53,10 +53,7 @@
         { name: 'Canva',              initials: 'Cv', color: '#00C4CC' },
         { name: 'Adobe Photoshop',    initials: 'Ps', color: '#31A8FF' },
         { name: 'ChatGPT',            initials: 'Gp', color: '#10A37F' },
-        { name: 'Google AI Studio',   initials: 'Ga', color: '#1A73E8' },
-        { name: 'Claude',             initials: 'Cl', color: '#D97757' },
-        { name: 'Google Gemini',      initials: 'Ge', color: '#8E75B2' },
-        { name: 'Microsoft Copilot',  initials: 'Cp', color: '#185ABD' }
+        { name: 'Google AI Studio',   initials: 'Ga', color: '#1A73E8' }
       ]
     }
   ];

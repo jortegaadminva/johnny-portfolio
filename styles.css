@@ -718,6 +718,36 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
    WORK SAMPLES
    ========================================================= */
 
+.sample-group{ margin-bottom:44px; }
+.sample-group:last-child{ margin-bottom:0; }
+
+.sample-group-primary{ margin-bottom:56px; }
+
+.sample-group-head{ margin-bottom:20px; }
+
+.sample-group-head h3{
+  font-family:var(--display);
+  font-size:13px;
+  font-weight:700;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink);
+}
+
+.sample-group-secondary .sample-group-head h3{ color:var(--ink-soft); }
+
+.sample-group-head p{
+  margin-top:6px;
+  max-width:640px;
+  font-size:14px;
+  color:var(--ink-soft);
+}
+
+.sample-group-secondary .sample-group-head p{
+  font-size:13.5px;
+  color:var(--ink-faint);
+}
+
 .sample-grid{
   display:grid;
   grid-template-columns:repeat(3, 1fr);
@@ -734,36 +764,76 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   box-shadow:var(--shadow);
 }
 
-.sample-icon{
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  width:44px;
-  height:44px;
-  border-radius:12px;
-  background:var(--mint);
-  font-size:19px;
+/* Real sanitized screenshot frame — solid border, fills the frame, gentle
+   hover cue since the whole thing is a link to the full-size sanitized image.
+   4:3 keeps more vertical spreadsheet/document detail visible than a wider
+   ratio would; nudge object-position or aspect-ratio per-image later if a
+   header row or key column ever gets cropped out of a real screenshot. */
+.sample-media{
+  display:block;
   margin-bottom:16px;
+  padding:0;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:12px;
+  background:var(--cream-deep);
+  aspect-ratio:4 / 3;
 }
 
-.sample-card h3{
+.sample-media img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:top center;
+  transition:transform .25s ease;
+}
+
+.sample-media:hover img{ transform:scale(1.03); }
+
+.sample-card h3,
+.visual-project h3{
   font-size:18.5px;
   font-weight:700;
+  margin-bottom:8px;
+}
+
+.sample-source{
+  font-family:var(--display);
+  font-size:12px;
+  font-weight:700;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--green);
+  margin-bottom:6px;
+}
+
+.sample-category{
+  font-size:13.5px;
+  color:var(--ink-faint);
   margin-bottom:12px;
 }
 
-.sample-problem,
 .sample-did{
   font-size:15px;
   color:var(--ink-soft);
   margin-bottom:10px;
 }
 
-.sample-problem em,
-.sample-did em{
-  font-style:normal;
+.sample-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-bottom:10px;
+}
+
+.sample-tags li{
+  font-size:12.5px;
   font-weight:600;
-  color:var(--ink);
+  color:var(--ink-soft);
+  background:var(--cream-deep);
+  border-radius:999px;
+  padding:5px 12px;
 }
 
 .sample-tools{
@@ -773,15 +843,15 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   color:var(--ink-faint);
 }
 
-.sample-pending{
+.sample-privacy{
   margin-top:14px;
   align-self:flex-start;
   font-family:var(--display);
-  font-size:13px;
+  font-size:12.5px;
   font-weight:600;
   color:var(--ink-faint);
   background:var(--cream-deep);
-  border:1px dashed var(--border);
+  border:1px solid var(--border);
   border-radius:999px;
   padding:7px 14px;
 }
@@ -797,17 +867,54 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
 }
 .sample-link:hover{ border-bottom-color:var(--green); }
 
-.sample-note{
-  margin-top:28px;
-  font-size:15px;
-  color:var(--ink-soft);
+/* ---- Product Content & Visual Support (gallery-oriented, lighter card) ---- */
+
+.visual-project-grid{
+  display:grid;
+  grid-template-columns:repeat(2, 1fr);
+  gap:20px;
 }
 
-.sample-note a{
-  color:var(--green);
-  font-weight:600;
-  border-bottom:1px solid var(--green);
+.visual-project{
+  display:flex;
+  flex-direction:column;
+  background:var(--white);
+  border:1px solid var(--border);
+  border-radius:var(--radius-lg);
+  padding:22px;
 }
+
+.visual-meta{ margin-bottom:14px; }
+
+.visual-gallery{
+  display:grid;
+  grid-template-columns:repeat(auto-fit, minmax(110px, 1fr));
+  gap:10px;
+  margin-bottom:14px;
+}
+
+/* Square product-visual tiles — matches the source assets better than a
+   wide crop; swap to 4:3 later if the real exports read better that way. */
+.visual-gallery-item{
+  display:block;
+  padding:0;
+  overflow:hidden;
+  border:1px solid var(--border);
+  border-radius:10px;
+  background:var(--cream-deep);
+  aspect-ratio:1 / 1;
+}
+
+.visual-gallery-item img{
+  display:block;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center;
+  transition:transform .25s ease;
+}
+
+.visual-gallery-item:hover img{ transform:scale(1.03); }
 
 /* =========================================================
    TESTIMONIALS
@@ -1284,7 +1391,8 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   .proof-grid{ grid-template-columns:1fr; gap:20px; }
 
   .store-grid,
-  .sample-grid{ grid-template-columns:1fr; }
+  .sample-grid,
+  .visual-project-grid{ grid-template-columns:1fr; }
 
   .case-card,
   .store-card,
@@ -1318,6 +1426,8 @@ h1,h2,h3,h4{ font-family:var(--display); line-height:1.2; }
   .store-card:hover,
   .service-card:hover,
   .contact-card:hover{ transform:none; }
+  .sample-media:hover img,
+  .visual-gallery-item:hover img{ transform:none; }
 }
 
 /* ---------- Small utilities ---------- */
